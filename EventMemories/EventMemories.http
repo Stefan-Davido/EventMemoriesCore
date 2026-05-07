@@ -1,0 +1,6 @@
+@EventMemories_HostAddress = http://localhost:5177
+
+GET {{EventMemories_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
