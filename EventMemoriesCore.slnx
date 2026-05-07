@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="Dal/Dal.csproj" />
+  <Project Path="DalEntities/DalEntities.csproj" />
   <Project Path="EventMemories/EventMemories.csproj" />
   <Project Path="EventMemoriesServices/EventMemoriesServices.csproj" />
 </Solution>
