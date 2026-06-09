@@ -29,9 +29,7 @@ function LoginPage({ onLogin }) {
     try {
       const response = await authService.login(formData.email, formData.password);
       const user = response.data;
-
-      // Mock token - in real app, you'd get this from response
-      const token = 'mock-jwt-token-' + Date.now();
+      const token = user.token;
 
       onLogin(token, user);
       navigate('/');

@@ -91,7 +91,7 @@ function CreatePostPage() {
 
     try {
       await postService.create({
-        eventId: formData.eventId,
+        eventId: '2d54167d-7f81-4b45-a197-ab87852bad78', // mock event Id
         caption: formData.caption,
         mediaUrls: formData.mediaUrls
       });

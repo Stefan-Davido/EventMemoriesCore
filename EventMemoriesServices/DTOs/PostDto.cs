@@ -11,6 +11,7 @@ namespace EventMemoriesServices.DTOs
     public class CreatePostDto
     {
         public Guid EventId { get; set; }
+        public string Caption { get; set; }
         public List<string> MediaUrls { get; set; } = new List<string>();
     }
 
