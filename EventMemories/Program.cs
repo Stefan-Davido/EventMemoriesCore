@@ -49,9 +49,8 @@ namespace EventMemories
 
             builder.Services.AddControllers();
 
-
-            // Add OpenAPI for development
-            builder.Services.AddOpenApi();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
@@ -61,7 +60,6 @@ namespace EventMemories
             }
 
             app.UseHttpsRedirection();
-            app.MapOpenApi();
 
             // Enable Swagger UI
             app.UseSwagger();
