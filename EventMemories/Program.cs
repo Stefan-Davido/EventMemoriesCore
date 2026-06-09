@@ -14,6 +14,8 @@ namespace EventMemories
 {
     public class Program
     {
+        private const string FrontendCorsPolicy = "FrontendCorsPolicy";
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -48,6 +50,15 @@ namespace EventMemories
             builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.AddControllers();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(FrontendCorsPolicy, policy =>
+                {
+                    policy.WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -82,6 +93,8 @@ namespace EventMemories
                     Swashbuckle.AspNetCore.SwaggerUI.SubmitMethod.Patch
                 );
             });
+
+            app.UseCors(FrontendCorsPolicy);
 
             app.UseAuthentication();
             app.UseAuthorization();

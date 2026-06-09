@@ -35,10 +35,10 @@ apiClient.interceptors.response.use(
 // Auth Service
 export const authService = {
   login: (email, password) =>
-    apiClient.post('/user', { email, password, userName: email }),
+    apiClient.post('/Auth/login', { email, password, rememberMe: true }),
 
   register: (userName, email, password) =>
-    apiClient.post('/user', { userName, email, password }),
+    apiClient.post('/Auth/register', { userName, email, password }),
 
   getCurrentUser: () =>
     apiClient.get(`/user/${localStorage.getItem('userId')}`),
