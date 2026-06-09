@@ -7,6 +7,8 @@ namespace DalEntities
         public Guid EventId { get; set; }
         public List<string> MediaUrls { get; set; } = new List<string>();
         public bool IsDeleted { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime Updated { get; set; }
 
         public ApplicationUser User { get; set; } = null!;
         public Event Event { get; set; } = null!;
