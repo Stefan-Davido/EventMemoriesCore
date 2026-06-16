@@ -21,6 +21,12 @@ function LoginPage({ onLogin }) {
     setError('');
   };
 
+   const handleLogin = (token, user) => {
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('userId', user.id);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -28,11 +34,15 @@ function LoginPage({ onLogin }) {
 
     try {
       const response = await authService.login(formData.email, formData.password);
-      const user = response.data;
-      const token = user.token;
+      const user = response.data.user;
+      const token = response.data.token;
 
-      onLogin(token, user);
-      navigate('/');
+      if (response.data.success === true && (user || token)) {
+        handleLogin(token, user);
+        onLogin(token, user);
+        navigate('/');
+      }
+
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {

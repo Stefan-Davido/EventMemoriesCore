@@ -20,9 +20,7 @@ function Header({ onToggleSidebar, user }) {
 
   const fetchEvents = async () => {
       try {
-        debugger;
-        //localStorage.getItem('userId')
-        const response = await eventService.getByOwner("C5C68942-E3C1-43E3-EA94-08DEC63F1003"); // mock to use current user
+        const response = await eventService.getByOwner(localStorage.getItem('userId'));
         setEvents(response.data);
       } catch (err) {
         // do something
@@ -31,7 +29,6 @@ function Header({ onToggleSidebar, user }) {
 
   React.useEffect(() => {
     fetchEvents();
-    debugger; 
     localStorage.setItem("selectedEventId", selectedEventId);
   }, []);
 

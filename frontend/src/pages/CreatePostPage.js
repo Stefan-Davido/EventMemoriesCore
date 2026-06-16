@@ -9,7 +9,7 @@ function CreatePostPage() {
   const [events, setEvents] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [formData, setFormData] = useState({
-    eventId: '',
+    eventId: localStorage.getItem('selectedEventId'),
     caption: '',
     mediaUrls: [],
   });
@@ -24,11 +24,7 @@ function CreatePostPage() {
       const response = await eventService.getByOwner(localStorage.getItem('userId'));
       setEvents(response.data);
     } catch (err) {
-      // Mock data
-      setEvents([
-        { id: '1', name: 'Summer Vacation 2024' },
-        { id: '2', name: 'Beach Party' },
-      ]);
+      throw err;
     }
   };
 
@@ -91,7 +87,7 @@ function CreatePostPage() {
 
     try {
       await postService.create({
-        eventId: localStorage.getItem('selectedEventId'), // mock event Id
+        eventId: formData.eventId,
         caption: formData.caption,
         mediaUrls: formData.mediaUrls
       });
@@ -110,37 +106,6 @@ function CreatePostPage() {
         <p>Share your special moments with your event community</p>
 
         <form onSubmit={handleSubmit} className="create-post-form">
-            <label htmlFor="eventId">Select Event *</label>
-            <select
-              id="eventId"
-              name="eventId"
-              value={formData.eventId}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Choose an event...</option>
-              {events.map(event => (
-                <option key={event.id} value={event.id}>
-                  {event.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="input-group">
-            <label htmlFor="caption">Caption *</label>
-            <textarea
-              id="caption"
-              name="caption"
-              placeholder="What's on your mind? Share your thoughts about this moment..."
-              value={formData.caption}
-              onChange={handleChange}
-              rows="6"
-              maxLength="1000"
-              required
-            />
-            <p className="char-count">{formData.caption.length}/1000</p>
-          </div>
 
           <div className="media-upload-section">
             <h3>Add Media (Max 10 files)</h3>
