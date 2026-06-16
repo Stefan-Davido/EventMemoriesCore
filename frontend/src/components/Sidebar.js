@@ -8,7 +8,6 @@ function Sidebar({ isOpen, user, onLogout }) {
 
   const menuItems = [
     { icon: FiHome, label: 'Feed', path: '/' },
-    { icon: FiCalendar, label: 'My Events', path: '/events' },
     { icon: FiPlus, label: 'Create Post', path: '/create-post' },
     { icon: FiBell, label: 'Notifications', path: '/notifications' },
     { icon: FiUser, label: 'Profile', path: '/profile' },

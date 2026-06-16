@@ -1,18 +1,39 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiMenu, FiBell, FiUser, FiLogOut } from 'react-icons/fi';
+import { FiMenu, FiBell, FiUser, FiLogOut, FiCalendar } from 'react-icons/fi';
 import './Header.css';
+import { eventService } from '../services/apiService';
 
 function Header({ onToggleSidebar, user }) {
   const navigate = useNavigate();
   const [notificationCount] = React.useState(3); // Mock data
+  const [events, setEvents] = React.useState([]);
+  const [selectedEventId, setSelectedEventId] = React.useState('');
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
     localStorage.removeItem('userId');
+    localStorage.removeItem('selectedEventId');
     navigate('/auth/login');
   };
+
+  const fetchEvents = async () => {
+      try {
+        debugger;
+        //localStorage.getItem('userId')
+        const response = await eventService.getByOwner("C5C68942-E3C1-43E3-EA94-08DEC63F1003"); // mock to use current user
+        setEvents(response.data);
+      } catch (err) {
+        // do something
+      }
+    };
+
+  React.useEffect(() => {
+    fetchEvents();
+    debugger; 
+    localStorage.setItem("selectedEventId", selectedEventId);
+  }, []);
 
   return (
     <header className="header">
@@ -24,6 +45,26 @@ function Header({ onToggleSidebar, user }) {
       </div>
 
       <div className="header-right">
+        
+        <div className="header-user ">
+            <label htmlFor="eventId"><FiCalendar size={24} /></label>
+            <select
+              id="eventId"
+              name="eventId"
+              value={selectedEventId}
+              onChange={(e) => setSelectedEventId(e.target.value)}
+            >
+              <option value="">Choose an event...</option>
+              {events.map(event => (
+                <option key={event.id} value={event.id}>
+                  {event.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+       
+       
         <Link to="/notifications" className="header-icon-btn">
           <FiBell size={24} />
           {notificationCount > 0 && (

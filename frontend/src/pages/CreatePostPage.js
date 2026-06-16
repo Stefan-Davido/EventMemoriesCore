@@ -91,7 +91,7 @@ function CreatePostPage() {
 
     try {
       await postService.create({
-        eventId: '2d54167d-7f81-4b45-a197-ab87852bad78', // mock event Id
+        eventId: localStorage.getItem('selectedEventId'), // mock event Id
         caption: formData.caption,
         mediaUrls: formData.mediaUrls
       });
@@ -110,7 +110,6 @@ function CreatePostPage() {
         <p>Share your special moments with your event community</p>
 
         <form onSubmit={handleSubmit} className="create-post-form">
-          <div className="input-group">
             <label htmlFor="eventId">Select Event *</label>
             <select
               id="eventId"
@@ -189,6 +188,21 @@ function CreatePostPage() {
                 </div>
               </div>
             )}
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="caption">Caption *</label>
+            <textarea
+              id="caption"
+              name="caption"
+              placeholder="What's on your mind? Share your thoughts about this moment..."
+              value={formData.caption}
+              onChange={handleChange}
+              rows="6"
+              maxLength="1000"
+              required
+            />
+            <p className="char-count">{formData.caption.length}/1000</p>
           </div>
 
           <div className="form-actions">
