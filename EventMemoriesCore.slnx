@@ -3,4 +3,5 @@
   <Project Path="DalEntities/DalEntities.csproj" />
   <Project Path="EventMemories/EventMemories.csproj" />
   <Project Path="EventMemoriesServices/EventMemoriesServices.csproj" />
+  <Project Path="SharedItems/SharedItems.csproj" Id="4fca6a56-bae7-4347-8f20-30031bb7a019" />
 </Solution>
