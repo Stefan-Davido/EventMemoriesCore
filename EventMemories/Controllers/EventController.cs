@@ -2,6 +2,7 @@ using EventMemoriesServices.DTOs;
 using EventMemoriesServices.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SharedItems;
 
 namespace EventMemories.Controllers
 {
@@ -50,9 +51,11 @@ namespace EventMemories.Controllers
         [HttpPost]
         public async Task<ActionResult<EventDto>> CreateEvent([FromBody] CreateEventDto dto)
         {
-            var userIdString = User.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier")?.Value;
+            var userIdString = User.FindFirst(InternalClaimTypes.UserId)?.Value;
             if (!Guid.TryParse(userIdString, out var userId))
+            {
                 return BadRequest("Unable to identify user.");
+            }
 
             var eventEntity = await _service.CreateEventAsync(dto, userId);
             return CreatedAtAction(nameof(GetEventById), new { id = eventEntity.Id }, eventEntity);

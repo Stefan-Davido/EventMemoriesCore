@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using SharedItems;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -250,8 +251,8 @@ namespace EventMemories.Controllers
         /// </summary>
         private async Task<string> GenerateJwtToken(ApplicationUser user)
         {
-            var jwtSettings = _configuration.GetSection("JwtSettings");
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"] ?? "your-super-secret-key-change-this-in-production"));
+            var jwtSettings = _configuration.GetSection("Jwt");
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? "your-super-secret-key-change-this-in-production"));
             var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -261,8 +262,12 @@ namespace EventMemories.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email ?? ""),
                 new Claim(ClaimTypes.Name, user.UserName ?? ""),
-                new Claim("PhoneNumber", user.PhoneNumber ?? "")
+                new Claim(InternalClaimTypes.UserId, user.Id.ToString() ?? "")
             };
+
+            // TODO:
+            // add tenants
+            // add events
 
             // Add role claims
             foreach (var role in roles)

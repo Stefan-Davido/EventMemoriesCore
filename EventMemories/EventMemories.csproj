@@ -23,6 +23,7 @@
     <ProjectReference Include="..\Dal\Dal.csproj" />
     <ProjectReference Include="..\DalEntities\DalEntities.csproj" />
     <ProjectReference Include="..\EventMemoriesServices\EventMemoriesServices.csproj" />
+    <ProjectReference Include="..\SharedItems\SharedItems.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,12 +2,13 @@ using EventMemoriesServices.DTOs;
 using EventMemoriesServices.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SharedItems;
 
 namespace EventMemories.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class TenantController : ControllerBase
     {
         private readonly ITenantService _service;
@@ -43,9 +44,11 @@ namespace EventMemories.Controllers
         [HttpPost]
         public async Task<ActionResult<TenantDto>> CreateTenant([FromBody] CreateTenantDto dto)
         {
-            var userIdString = User.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier")?.Value;
+            var userIdString = User.FindFirst(InternalClaimTypes.UserId)?.Value;
             if (!Guid.TryParse(userIdString, out var userId))
+            {
                 return BadRequest("Unable to identify user.");
+            }
 
             var tenant = await _service.CreateTenantAsync(dto, userId);
             return CreatedAtAction(nameof(GetTenantById), new { id = tenant.Id }, tenant);
