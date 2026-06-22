@@ -27,9 +27,15 @@ function Header({ onToggleSidebar, user }) {
       }
     };
 
+  const handleOnChangeEvent = (e) => {
+    debugger;
+    const eventId = e.target.value;
+    setSelectedEventId(eventId);
+    localStorage.setItem('selectedEventId', eventId);
+  };
+
   React.useEffect(() => {
     fetchEvents();
-    localStorage.setItem("selectedEventId", selectedEventId);
   }, []);
 
   return (
@@ -49,7 +55,7 @@ function Header({ onToggleSidebar, user }) {
               id="eventId"
               name="eventId"
               value={selectedEventId}
-              onChange={(e) => setSelectedEventId(e.target.value)}
+              onChange={(e) => handleOnChangeEvent(e)}
             >
               <option value="">Choose an event...</option>
               {events.map(event => (
