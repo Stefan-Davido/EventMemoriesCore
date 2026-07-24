@@ -52,7 +52,7 @@ namespace EventMemoriesServices.Services
                 OwnerId = ownerId
             };
 
-            await _repository.AddAsync(tenant);
+            await _repository.AddAsync(tenant); 
             await _repository.SaveChangesAsync();
             return MapToDto(tenant);
         }
