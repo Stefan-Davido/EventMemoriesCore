@@ -9,6 +9,9 @@ using Microsoft.Identity.Abstractions;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.Resource;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using SharedItems.Services;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 using System.Text;
 
@@ -78,6 +81,7 @@ namespace EventMemories
             builder.Services.AddScoped<IInfoService, InfoService>();
             builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 
             builder.Services.AddControllers();
             builder.Services.AddCors(options =>
@@ -92,6 +96,10 @@ namespace EventMemories
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.OperationFilter<SwaggerFileOperationFilter>();
+            });
 
             var app = builder.Build();
 
@@ -132,6 +140,66 @@ namespace EventMemories
             app.MapControllers();
 
             app.Run();
+        }
+    }
+
+    public class SwaggerFileOperationFilter : IOperationFilter
+    {
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
+        {
+            var formParams = context.MethodInfo.GetParameters()
+                .Where(p => p.GetCustomAttribute<Microsoft.AspNetCore.Mvc.FromFormAttribute>() != null
+                         || p.ParameterType.GetProperties().Any(prop => IsFileType(prop.PropertyType)))
+                .ToList();
+
+            if (!formParams.Any()) return;
+
+            var properties = new Dictionary<string, IOpenApiSchema>();
+
+            foreach (var param in formParams)
+            {
+                foreach (var prop in param.ParameterType.GetProperties())
+                {
+                    properties[prop.Name] = IsFileType(prop.PropertyType)
+                        ? new OpenApiSchema
+                        {
+                            Type = JsonSchemaType.Array,
+                            Items = new OpenApiSchema { Type = JsonSchemaType.String, Format = "binary" }
+                        }
+                        : new OpenApiSchema { Type = MapSimpleType(prop.PropertyType) };
+                }
+            }
+
+            operation.RequestBody = new OpenApiRequestBody
+            {
+                Content = new Dictionary<string, OpenApiMediaType>
+                {
+                    ["multipart/form-data"] = new OpenApiMediaType
+                    {
+                        Schema = new OpenApiSchema
+                        {
+                            Type = JsonSchemaType.Object,
+                            Properties = properties
+                        }
+                    }
+                }
+            };
+
+            operation.Parameters?.Clear();
+        }
+
+        private static bool IsFileType(Type type)
+        {
+            return type == typeof(IFormFile)
+                || typeof(IEnumerable<IFormFile>).IsAssignableFrom(type);
+        }
+
+        private static JsonSchemaType MapSimpleType(Type type)
+        {
+            if (type == typeof(int) || type == typeof(int?)) return JsonSchemaType.Integer;
+            if (type == typeof(bool) || type == typeof(bool?)) return JsonSchemaType.Boolean;
+            // Guid, DateTime, string, etc. all serialize as string in OpenAPI
+            return JsonSchemaType.String;
         }
     }
 }

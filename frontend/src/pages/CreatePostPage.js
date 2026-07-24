@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiImage, FiVideo, FiX } from 'react-icons/fi';
-import { postService, eventService } from '../services/apiService';
+import { postService } from '../services/apiService';
 import './CreatePostPage.css';
 
 function CreatePostPage() {
   const navigate = useNavigate();
-  const [events, setEvents] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [formData, setFormData] = useState({
     eventId: localStorage.getItem('selectedEventId'),
@@ -16,17 +15,17 @@ function CreatePostPage() {
   const [mediaPreview, setMediaPreview] = useState([]);
 
   React.useEffect(() => {
-    fetchEvents();
+    //fetchEvents();
   }, []);
 
-  const fetchEvents = async () => {
-    try {
-      const response = await eventService.getByOwner(localStorage.getItem('userId'));
-      setEvents(response.data);
-    } catch (err) {
-      throw err;
-    }
-  };
+  // const fetchEvents = async () => {
+  //   try {
+  //     const response = await eventService.getByOwner(localStorage.getItem('userId'));
+  //     setEvents(response.data);
+  //   } catch (err) {
+  //     throw err;
+  //   }
+  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,33 +36,33 @@ function CreatePostPage() {
   };
 
   const handleMediaUpload = (e) => {
-    const files = e.target.files;
-    const newUrls = [];
+    debugger
+    const files = Array.from(e.target.files);
     const newPreviews = [];
+    const newFiles = [];
 
-    for (let i = 0; i < files.length && formData.mediaUrls.length + i < 10; i++) {
-      const file = files[i];
+    files.forEach((file, index) => {
       const reader = new FileReader();
 
       reader.onload = (event) => {
         newPreviews.push({
-          id: Date.now() + i,
+          id: Date.now() + index,
           url: event.target.result,
           type: file.type.startsWith('video') ? 'video' : 'image'
         });
 
-        if (newPreviews.length === i + 1) {
+        if (newPreviews.length === Math.min(files.length, 10 - formData.mediaUrls.length)) {
           setMediaPreview(prev => [...prev, ...newPreviews]);
         }
       };
 
       reader.readAsDataURL(file);
-      newUrls.push(file.name);
-    }
+      newFiles.push(file);
+    });
 
     setFormData(prev => ({
       ...prev,
-      mediaUrls: [...prev.mediaUrls, ...newUrls].slice(0, 10)
+      mediaUrls: [...prev.mediaUrls, ...newFiles].slice(0, 10)
     }));
   };
 
@@ -77,20 +76,24 @@ function CreatePostPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+debugger
     if (!formData.eventId || !formData.caption.trim()) {
-      alert('Please fill in all required fields');
       return;
     }
 
     setLoading(true);
 
     try {
-      await postService.create({
-        eventId: formData.eventId,
-        caption: formData.caption,
-        mediaUrls: formData.mediaUrls
+      const payload = new FormData();
+      payload.append('eventId', formData.eventId);
+      payload.append('caption', formData.caption);
+
+      formData.mediaUrls.forEach((file) => {
+        payload.append('files', file);
       });
+
+      await postService.create(payload);
+
       navigate('/');
     } catch (err) {
       alert('Failed to create post');

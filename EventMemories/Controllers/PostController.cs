@@ -49,7 +49,7 @@ namespace EventMemories.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<PostDto>> CreatePost([FromBody] CreatePostDto dto)
+        public async Task<ActionResult<PostDto>> CreatePost([FromForm] CreatePostDto createPostDto)
         {
             var userIdString = User.FindFirst(InternalClaimTypes.UserId)?.Value;
             if (!Guid.TryParse(userIdString, out var userId))
@@ -57,7 +57,7 @@ namespace EventMemories.Controllers
                 return BadRequest("Unable to identify user.");
             }
 
-            var post = await _service.CreatePostAsync(dto, userId);
+            var post = await _service.CreatePostAsync(createPostDto, userId);
             return CreatedAtAction(nameof(GetPostById), new { id = post.Id }, post);
         }
 

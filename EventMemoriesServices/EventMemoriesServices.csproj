@@ -7,8 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DalEntities\DalEntities.csproj" />
     <ProjectReference Include="..\Dal\Dal.csproj" />
+    <ProjectReference Include="..\SharedItems\SharedItems.csproj" />
   </ItemGroup>
 
 </Project>

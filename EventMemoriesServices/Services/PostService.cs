@@ -1,6 +1,7 @@
 using DalEntities;
 using Dal.Repositories;
 using EventMemoriesServices.DTOs;
+using SharedItems.Services;
 
 namespace EventMemoriesServices.Services
 {
@@ -18,10 +19,12 @@ namespace EventMemoriesServices.Services
     public class PostService : IPostService
     {
         private readonly IPostRepository _repository;
+        private readonly IBlobStorageService _blobStorageService;
 
-        public PostService(IPostRepository repository)
+        public PostService(IPostRepository repository, IBlobStorageService blobStorageService)
         {
             _repository = repository;
+            _blobStorageService = blobStorageService;
         }
 
         public async Task<PostDto?> GetPostByIdAsync(Guid id)
@@ -48,14 +51,32 @@ namespace EventMemoriesServices.Services
             return posts.Select(MapToDto);
         }
 
-        public async Task<PostDto> CreatePostAsync(CreatePostDto dto, Guid userId)
+        public async Task<PostDto> CreatePostAsync(CreatePostDto createPostDto, Guid userId)
         {
+            var allowedTypes = new[] { "image/jpeg", "image/png", "image/webp" };
+            var mediaUrls = new List<string>();
+
+            if (string.IsNullOrEmpty(createPostDto.EventId.ToString()))
+                throw new Exception($"Missing paramer EventId!");
+
+            foreach (var file in createPostDto.Files)
+            {
+                if (!allowedTypes.Contains(file.ContentType))
+                    throw new Exception($"Unsupported file type: {file}");
+
+                if (file.Length == 0)
+                    continue;
+
+                var url = await _blobStorageService.UploadAsync(file);
+                mediaUrls.Add(url);
+            }
+
             var post = new Post
             {
                 Id = Guid.NewGuid(),
                 UserId = userId,
-                EventId = dto.EventId,
-                MediaUrls = dto.MediaUrls
+                EventId = createPostDto.EventId,
+                MediaUrls = mediaUrls
             };
 
             await _repository.AddAsync(post);
@@ -93,7 +114,8 @@ namespace EventMemoriesServices.Services
                 Id = post.Id,
                 UserId = post.UserId,
                 EventId = post.EventId,
-                MediaUrls = post.MediaUrls
+                MediaUrls = post.MediaUrls,
+                //Caption = post.C
             };
         }
     }

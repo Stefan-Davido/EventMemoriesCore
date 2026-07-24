@@ -86,7 +86,9 @@ export const postService = {
 
   getByUser: (userId) => apiClient.get(`/post/user/${userId}`),
 
-  create: (data) => apiClient.post('/post', data),
+  create: (data) => apiClient.post('/post', data, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+  }),
 
   update: (id, data) => apiClient.put(`/post/${id}`, data),
 
