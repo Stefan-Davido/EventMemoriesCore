@@ -76,7 +76,9 @@ namespace EventMemoriesServices.Services
                 Id = Guid.NewGuid(),
                 UserId = userId,
                 EventId = createPostDto.EventId,
-                MediaUrls = mediaUrls
+                MediaUrls = mediaUrls,
+                Created = DateTime.Now,
+                Updated = DateTime.Now
             };
 
             await _repository.AddAsync(post);
@@ -91,7 +93,10 @@ namespace EventMemoriesServices.Services
                 return null;
 
             if (dto.MediaUrls != null)
+            {
                 post.MediaUrls = dto.MediaUrls;
+                post.Updated = DateTime.Now;
+            }
 
             await _repository.UpdateAsync(post);
             await _repository.SaveChangesAsync();
