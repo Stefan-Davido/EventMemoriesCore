@@ -79,7 +79,8 @@ namespace EventMemoriesServices.Services
 
         public async Task<bool> DeletePostAsync(Guid id)
         {
-            var result = await _repository.DeleteAsync(id);
+            var result = await _repository.SoftDeleteAsync(id);
+
             if (result)
                 await _repository.SaveChangesAsync();
             return result;

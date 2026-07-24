@@ -46,6 +46,21 @@ namespace Dal.Repositories
             return true;
         }
 
+        public virtual async Task<bool> SoftDeleteAsync(Guid id)
+        {
+            var entity = await GetByIdAsync(id);
+            if (entity == null)
+                return false;
+
+
+            if (entity is not IIsDeleted softDeleteEntity)
+                return false; // or throw new InvalidOperationException($"{typeof(T).Name} does not support soft delete");
+
+            softDeleteEntity.IsDeleted = true;
+            _dbSet.Update(entity);
+            return true;
+        }
+
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

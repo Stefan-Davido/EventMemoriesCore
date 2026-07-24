@@ -9,6 +9,7 @@ namespace Dal.Repositories
         Task<T> AddAsync(T entity);
         Task<T> UpdateAsync(T entity);
         Task<bool> DeleteAsync(Guid id);
+        Task<bool> SoftDeleteAsync(Guid id);
         Task SaveChangesAsync();
     }
 }
