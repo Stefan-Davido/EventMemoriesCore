@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { userService } from '../services/apiService';
+import { userService, postService } from '../services/apiService';
 import { FiEdit2, FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
 import './ProfilePage.css';
+import PostCard from '../components/PostCard';
 
 function ProfilePage({ user }) {
   const [userData, setUserData] = useState(user);
@@ -11,6 +12,9 @@ function ProfilePage({ user }) {
     email: user?.email || '',
     phoneNumber: user?.phoneNumber || '',
   });
+  const [posts, setPosts] = useState([]);
+  const [editingPostId, setEditingPostId] = useState(null);
+  const [editingCaption, setEditingCaption] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,6 +32,50 @@ function ProfilePage({ user }) {
       alert('Profile updated successfully!');
     } catch (err) {
       alert('Failed to update profile');
+    }
+  };
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        if (!user?.id) return;
+        const res = await postService.getByUser(user.id);
+        setPosts(res.data || []);
+      } catch (err) {
+        console.error('Failed to fetch posts', err);
+      }
+    };
+
+    fetchPosts();
+  }, [user]);
+
+  const handleDeletePost = async (postId) => {
+    if (!window.confirm('Delete this post?')) return;
+    try {
+      await postService.delete(postId);
+      setPosts(prev => prev.filter(p => p.id !== postId));
+    } catch (err) {
+      alert('Failed to delete post');
+    }
+  };
+
+  const startEditPost = (post) => {
+    setEditingPostId(post.id);
+    setEditingCaption(post.caption || '');
+  };
+
+  const cancelEditPost = () => {
+    setEditingPostId(null);
+    setEditingCaption('');
+  };
+
+  const saveEditPost = async (postId) => {
+    try {
+      const res = await postService.update(postId, { caption: editingCaption });
+      setPosts(prev => prev.map(p => p.id === postId ? res.data : p));
+      cancelEditPost();
+    } catch (err) {
+      alert('Failed to update post');
     }
   };
 
@@ -127,7 +175,7 @@ function ProfilePage({ user }) {
 
         <div className="profile-stats">
           <div className="stat">
-            <p className="stat-value">42</p>
+            <p className="stat-value">{posts.length}</p>
             <p className="stat-label">Posts</p>
           </div>
           <div className="stat">
@@ -138,6 +186,40 @@ function ProfilePage({ user }) {
             <p className="stat-value">5</p>
             <p className="stat-label">Events</p>
           </div>
+        </div>
+
+        <div className="user-posts">
+          <h2>Your Posts ({posts.length})</h2>
+          {posts.length === 0 ? (
+            <p>No posts yet.</p>
+          ) : (
+            posts.map((post) => (
+              <div key={post.id} className="profile-post-item">
+                {editingPostId === post.id ? (
+                  <div className="edit-post">
+                    <textarea
+                      value={editingCaption}
+                      onChange={(e) => setEditingCaption(e.target.value)}
+                      rows={3}
+                    />
+                    <div className="edit-actions">
+                      <button className="btn btn-primary" onClick={() => saveEditPost(post.id)}>Save</button>
+                      <button className="btn btn-secondary" onClick={cancelEditPost}>Cancel</button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <PostCard
+                      post={post}
+                      showOwnerControls={true}
+                      onEdit={() => startEditPost(post)}
+                      onDelete={() => handleDeletePost(post.id)}
+                    />
+                  </>
+                )}
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
