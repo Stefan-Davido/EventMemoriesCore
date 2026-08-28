@@ -9,6 +9,8 @@ namespace Dal.Configurations
         public void Configure(EntityTypeBuilder<Tenant> builder)
         {
             builder.HasKey(t => t.Id);
+            builder.Property(x => x.Id)
+                .ValueGeneratedOnAdd();
 
             builder.Property(t => t.Name)
                 .IsRequired()
@@ -29,6 +31,9 @@ namespace Dal.Configurations
                 .WithOne(e => e.Tenant)
                 .HasForeignKey(e => e.TenantId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(x => x.Id)
+                .IsUnique();
         }
     }
 }

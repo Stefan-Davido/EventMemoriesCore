@@ -9,6 +9,8 @@ namespace Dal.Configurations
         public void Configure(EntityTypeBuilder<Post> builder)
         {
             builder.HasKey(p => p.Id);
+            builder.Property(x => x.Id)
+                .ValueGeneratedOnAdd();
 
             builder.HasOne(p => p.User)
                 .WithMany(u => u.Posts)

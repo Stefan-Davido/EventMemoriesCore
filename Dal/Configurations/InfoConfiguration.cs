@@ -9,6 +9,8 @@ namespace Dal.Configurations
         public void Configure(EntityTypeBuilder<Info> builder)
         {
             builder.HasKey(i => i.Id);
+            builder.Property(x => x.Id)
+                .ValueGeneratedOnAdd();
 
             builder.Property(i => i.Text)
                 .IsRequired()

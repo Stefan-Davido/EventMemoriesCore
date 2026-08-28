@@ -9,6 +9,8 @@ namespace Dal.Configurations
         public void Configure(EntityTypeBuilder<Event> builder)
         {
             builder.HasKey(e => e.Id);
+            builder.Property(x => x.Id)
+                .ValueGeneratedOnAdd();
 
             builder.Property(e => e.Name)
                 .IsRequired()
@@ -47,6 +49,9 @@ namespace Dal.Configurations
                 .WithOne(c => c.Event)
                 .HasForeignKey(c => c.EventId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(e => e.Id)
+                .IsUnique();
         }
     }
 }

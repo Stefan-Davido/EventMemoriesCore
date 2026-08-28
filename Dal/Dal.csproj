@@ -17,4 +17,8 @@
     <ProjectReference Include="..\DalEntities\DalEntities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

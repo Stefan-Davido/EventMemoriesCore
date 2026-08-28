@@ -161,7 +161,8 @@ namespace Dal.Migrations
                 name: "Tenants",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -186,7 +187,7 @@ namespace Dal.Migrations
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<int>(type: "int", nullable: false),
                     EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EventDateEnd = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
@@ -234,7 +235,8 @@ namespace Dal.Migrations
                 name: "Infos",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Level = table.Column<int>(type: "int", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -332,6 +334,12 @@ namespace Dal.Migrations
                 column: "EventId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Events_Id",
+                table: "Events",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Events_OwnerId",
                 table: "Events",
                 column: "OwnerId");
@@ -360,6 +368,12 @@ namespace Dal.Migrations
                 name: "IX_Posts_UserId",
                 table: "Posts",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tenants_Id",
+                table: "Tenants",
+                column: "Id",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tenants_OwnerId",
