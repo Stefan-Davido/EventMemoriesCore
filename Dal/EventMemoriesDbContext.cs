@@ -1,6 +1,8 @@
 ﻿using DalEntities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Dal
@@ -21,8 +23,24 @@ namespace Dal
         {
             base.OnModelCreating(modelBuilder);
 
-            // Apply entity configurations
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(EventMemoriesDbContext).Assembly);
+            // Apply entity configurations from all loaded assemblies so changes
+            // in any class implementing IEntityTypeConfiguration<T> are picked up
+            // when creating migrations.
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic)
+                .ToArray();
+
+            foreach (var assembly in assemblies)
+            {
+                try
+                {
+                    modelBuilder.ApplyConfigurationsFromAssembly(assembly);
+                }
+                catch
+                {
+                    // Ignore assemblies that cannot be scanned for configurations
+                }
+            }
 
             // Apply query filter for soft delete to all entities implementing IIsDeleted
             ApplySoftDeleteFilter(modelBuilder);
