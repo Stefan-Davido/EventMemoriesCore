@@ -19,7 +19,7 @@ namespace EventMemories.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TenantDto>> GetTenantById(Guid id)
+        public async Task<ActionResult<TenantDto>> GetTenantById(int id)
         {
             var tenant = await _service.GetTenantByIdAsync(id);
             if (tenant == null)
@@ -55,7 +55,7 @@ namespace EventMemories.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<TenantDto>> UpdateTenant(Guid id, [FromBody] UpdateTenantDto dto)
+        public async Task<ActionResult<TenantDto>> UpdateTenant(int id, [FromBody] UpdateTenantDto dto)
         {
             var tenant = await _service.UpdateTenantAsync(id, dto);
             if (tenant == null)
@@ -64,7 +64,7 @@ namespace EventMemories.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTenant(Guid id)
+        public async Task<IActionResult> DeleteTenant(int id)
         {
             var result = await _service.DeleteTenantAsync(id);
             if (!result)

@@ -19,7 +19,7 @@ namespace EventMemories.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<InfoDto>> GetInfoById(Guid id)
+        public async Task<ActionResult<InfoDto>> GetInfoById(int id)
         {
             var info = await _service.GetInfoByIdAsync(id);
             if (info == null)
@@ -70,7 +70,7 @@ namespace EventMemories.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<InfoDto>> UpdateInfo(Guid id, [FromBody] UpdateInfoDto dto)
+        public async Task<ActionResult<InfoDto>> UpdateInfo(int id, [FromBody] UpdateInfoDto dto)
         {
             var info = await _service.UpdateInfoAsync(id, dto);
             if (info == null)
@@ -79,7 +79,7 @@ namespace EventMemories.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteInfo(Guid id)
+        public async Task<IActionResult> DeleteInfo(int id)
         {
             var result = await _service.DeleteInfoAsync(id);
             if (!result)

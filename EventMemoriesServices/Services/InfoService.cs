@@ -6,14 +6,14 @@ namespace EventMemoriesServices.Services
 {
     public interface IInfoService
     {
-        Task<InfoDto?> GetInfoByIdAsync(Guid id);
+        Task<InfoDto?> GetInfoByIdAsync(int id);
         Task<IEnumerable<InfoDto>> GetAllInfosAsync();
         Task<IEnumerable<InfoDto>> GetInfosByEventAsync(Guid eventId);
         Task<IEnumerable<InfoDto>> GetInfosByUserAsync(Guid userId);
         Task<IEnumerable<InfoDto>> GetInfosByLevelAsync(InfoLevel level);
         Task<InfoDto> CreateInfoAsync(CreateInfoDto dto, Guid userId);
-        Task<InfoDto?> UpdateInfoAsync(Guid id, UpdateInfoDto dto);
-        Task<bool> DeleteInfoAsync(Guid id);
+        Task<InfoDto?> UpdateInfoAsync(int id, UpdateInfoDto dto);
+        Task<bool> DeleteInfoAsync(int id);
     }
 
     public class InfoService : IInfoService
@@ -25,7 +25,7 @@ namespace EventMemoriesServices.Services
             _repository = repository;
         }
 
-        public async Task<InfoDto?> GetInfoByIdAsync(Guid id)
+        public async Task<InfoDto?> GetInfoByIdAsync(int id)
         {
             var info = await _repository.GetByIdAsync(id);
             return info != null ? MapToDto(info) : null;
@@ -59,7 +59,6 @@ namespace EventMemoriesServices.Services
         {
             var info = new Info
             {
-                Id = Guid.NewGuid(),
                 Level = dto.Level,
                 Text = dto.Text,
                 Date = dto.Date,
@@ -72,7 +71,7 @@ namespace EventMemoriesServices.Services
             return MapToDto(info);
         }
 
-        public async Task<InfoDto?> UpdateInfoAsync(Guid id, UpdateInfoDto dto)
+        public async Task<InfoDto?> UpdateInfoAsync(int id, UpdateInfoDto dto)
         {
             var info = await _repository.GetByIdAsync(id);
             if (info == null)
@@ -92,7 +91,7 @@ namespace EventMemoriesServices.Services
             return MapToDto(info);
         }
 
-        public async Task<bool> DeleteInfoAsync(Guid id)
+        public async Task<bool> DeleteInfoAsync(int id)
         {
             var result = await _repository.DeleteAsync(id);
             if (result)

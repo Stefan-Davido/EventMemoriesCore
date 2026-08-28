@@ -4,7 +4,7 @@ namespace EventMemoriesServices.DTOs
 {
     public class InfoDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public InfoLevel Level { get; set; }
         public string Text { get; set; } = string.Empty;
         public DateTime? Date { get; set; }
