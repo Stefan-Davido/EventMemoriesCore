@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DalEntities\DalEntities.csproj" />
+    <ProjectReference Include="..\SharedItems\SharedItems.csproj" />
   </ItemGroup>
 
 </Project>

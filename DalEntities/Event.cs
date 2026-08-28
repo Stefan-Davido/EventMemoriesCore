@@ -1,6 +1,6 @@
 namespace DalEntities
 {
-    public class Event
+    public class Event : ITenantId
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
