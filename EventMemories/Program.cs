@@ -10,6 +10,7 @@ using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.Resource;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using SharedItems;
 using SharedItems.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
@@ -28,6 +29,9 @@ namespace EventMemories
             // Add DbContext
             builder.Services.AddDbContext<EventMemoriesDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<TenantProvider>();
 
             // Add Identity
             builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
