@@ -2,9 +2,9 @@ using DalEntities;
 
 namespace Dal.Repositories
 {
-    public interface ITenantRepository : IRepository<Tenant>
+    public interface ITenantRepository : IRepository<Tenant, int>
     {
         Task<IEnumerable<Tenant>> GetTenantsByOwnerAsync(Guid ownerId);
-        Task<Tenant?> GetTenantWithEventsAsync(Guid tenantId);
+        Task<Tenant?> GetTenantWithEventsAsync(int tenantId);
     }
 }

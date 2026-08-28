@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dal.Repositories
 {
-    public class EventRepository : Repository<Event>, IEventRepository
+    public class EventRepository : Repository<Event, Guid>, IEventRepository
     {
         public EventRepository(EventMemoriesDbContext context) : base(context)
         {
         }
 
-        public async Task<IEnumerable<Event>> GetEventsByTenantAsync(Guid tenantId)
+        public async Task<IEnumerable<Event>> GetEventsByTenantAsync(int tenantId)
         {
             return await _dbSet
                 .Where(e => e.TenantId == tenantId)

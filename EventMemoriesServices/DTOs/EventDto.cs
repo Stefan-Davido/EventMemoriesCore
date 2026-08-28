@@ -8,7 +8,7 @@ namespace EventMemoriesServices.DTOs
         public string Name { get; set; } = string.Empty;
         public DateTime CreatedTime { get; set; }
         public Guid OwnerId { get; set; }
-        public Guid TenantId { get; set; }
+        public int TenantId { get; set; }
         public DateTime EventDate { get; set; }
         public DateTime? EventDateEnd { get; set; }
         public string? Description { get; set; }
@@ -18,7 +18,7 @@ namespace EventMemoriesServices.DTOs
     public class CreateEventDto
     {
         public string Name { get; set; } = string.Empty;
-        public Guid TenantId { get; set; }
+        public int TenantId { get; set; }
         public DateTime EventDate { get; set; }
         public DateTime? EventDateEnd { get; set; }
         public string? Description { get; set; }

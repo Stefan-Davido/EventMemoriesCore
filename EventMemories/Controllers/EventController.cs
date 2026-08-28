@@ -35,7 +35,7 @@ namespace EventMemories.Controllers
         }
 
         [HttpGet("tenant/{tenantId}")]
-        public async Task<ActionResult<IEnumerable<EventDto>>> GetEventsByTenant(Guid tenantId)
+        public async Task<ActionResult<IEnumerable<EventDto>>> GetEventsByTenant(int tenantId)
         {
             var events = await _service.GetEventsByTenantAsync(tenantId);
             return Ok(events);

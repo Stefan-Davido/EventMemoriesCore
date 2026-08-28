@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dal.Repositories
 {
-    public class UserRepository : Repository<ApplicationUser>, IUserRepository
+    public class UserRepository : Repository<ApplicationUser, Guid>, IUserRepository
     {
         public UserRepository(EventMemoriesDbContext context) : base(context)
         {

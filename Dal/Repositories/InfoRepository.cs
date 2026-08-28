@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dal.Repositories
 {
-    public class InfoRepository : Repository<Info>, IInfoRepository
+    public class InfoRepository : Repository<Info, int>, IInfoRepository
     {
         public InfoRepository(EventMemoriesDbContext context) : base(context)
         {

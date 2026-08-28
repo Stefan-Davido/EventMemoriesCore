@@ -73,7 +73,6 @@ namespace EventMemoriesServices.Services
 
             var post = new Post
             {
-                Id = Guid.NewGuid(),
                 UserId = userId,
                 EventId = createPostDto.EventId,
                 MediaUrls = mediaUrls,

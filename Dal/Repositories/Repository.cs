@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dal.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T, TKey> : IRepository<T, TKey> where T : class
     {
         protected readonly EventMemoriesDbContext _context;
         protected readonly DbSet<T> _dbSet;
@@ -14,7 +14,7 @@ namespace Dal.Repositories
             _dbSet = context.Set<T>();
         }
 
-        public virtual async Task<T?> GetByIdAsync(Guid id)
+        public virtual async Task<T?> GetByIdAsync(TKey id)
         {
             return await _dbSet.FindAsync(id);
         }
@@ -36,7 +36,7 @@ namespace Dal.Repositories
             return entity;
         }
 
-        public virtual async Task<bool> DeleteAsync(Guid id)
+        public virtual async Task<bool> DeleteAsync(TKey id)
         {
             var entity = await GetByIdAsync(id);
             if (entity == null)
@@ -46,7 +46,7 @@ namespace Dal.Repositories
             return true;
         }
 
-        public virtual async Task<bool> SoftDeleteAsync(Guid id)
+        public virtual async Task<bool> SoftDeleteAsync(TKey id)
         {
             var entity = await GetByIdAsync(id);
             if (entity == null)

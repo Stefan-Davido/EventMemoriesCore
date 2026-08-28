@@ -8,7 +8,7 @@ namespace EventMemoriesServices.Services
     {
         Task<EventDto?> GetEventByIdAsync(Guid id);
         Task<IEnumerable<EventDto>> GetAllEventsAsync();
-        Task<IEnumerable<EventDto>> GetEventsByTenantAsync(Guid tenantId);
+        Task<IEnumerable<EventDto>> GetEventsByTenantAsync(int tenantId);
         Task<IEnumerable<EventDto>> GetEventsByOwnerAsync(Guid ownerId);
         Task<EventDto> CreateEventAsync(CreateEventDto dto, Guid ownerId);
         Task<EventDto?> UpdateEventAsync(Guid id, UpdateEventDto dto);
@@ -36,7 +36,7 @@ namespace EventMemoriesServices.Services
             return events.Select(MapToDto);
         }
 
-        public async Task<IEnumerable<EventDto>> GetEventsByTenantAsync(Guid tenantId)
+        public async Task<IEnumerable<EventDto>> GetEventsByTenantAsync(int tenantId)
         {
             var events = await _repository.GetEventsByTenantAsync(tenantId);
             return events.Select(MapToDto);

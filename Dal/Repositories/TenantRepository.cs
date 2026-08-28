@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dal.Repositories
 {
-    public class TenantRepository : Repository<Tenant>, ITenantRepository
+    public class TenantRepository : Repository<Tenant, int>, ITenantRepository
     {
         public TenantRepository(EventMemoriesDbContext context) : base(context)
         {
@@ -16,7 +16,7 @@ namespace Dal.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Tenant?> GetTenantWithEventsAsync(Guid tenantId)
+        public async Task<Tenant?> GetTenantWithEventsAsync(int tenantId)
         {
             return await _dbSet
                 .Include(t => t.Events)

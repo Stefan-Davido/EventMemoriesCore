@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dal.Repositories
 {
-    public class ConfigurationRepository : Repository<Configuration>, IConfigurationRepository
+    public class ConfigurationRepository : Repository<Configuration, Guid>, IConfigurationRepository
     {
         public ConfigurationRepository(EventMemoriesDbContext context) : base(context)
         {
