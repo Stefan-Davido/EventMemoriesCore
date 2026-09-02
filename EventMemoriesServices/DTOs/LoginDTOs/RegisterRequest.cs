@@ -21,8 +21,8 @@ namespace EventMemoriesServices.DTOs
             ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)")]
         public string Password { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Password confirmation is required")]
-        [Compare("Password", ErrorMessage = "Passwords do not match")]
+        //[Required(ErrorMessage = "Password confirmation is required")]
+        //[Compare("Password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
         [Phone(ErrorMessage = "Invalid phone number format")]

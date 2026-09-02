@@ -34,9 +34,19 @@ namespace EventMemories
             builder.Services.AddScoped<TenantProvider>();
 
             // Add Identity
-            builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-                .AddEntityFrameworkStores<EventMemoriesDbContext>()
-                .AddDefaultTokenProviders();
+            builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
+                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredLength = 8;
+            })
+            .AddEntityFrameworkStores<EventMemoriesDbContext>()
+            .AddUserManager<ApplicationUserManager>()
+            .AddDefaultTokenProviders();
 
             // Add services to the container.
             //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -79,6 +89,7 @@ namespace EventMemories
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             // Register services
+            builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ITenantService, TenantService>();
             builder.Services.AddScoped<IEventService, EventService>();
             builder.Services.AddScoped<IPostService, PostService>();
