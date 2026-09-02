@@ -114,6 +114,9 @@ namespace EventMemories
 
             app.UseHttpsRedirection();
 
+            // Middlewares
+            app.UseMiddleware<SharedItems.Middleware.GlobalExceptionMiddleware>();
+
             // Enable Swagger UI
             app.UseSwagger();
             app.UseSwaggerUI(options =>
