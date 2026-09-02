@@ -54,6 +54,8 @@ namespace Dal
 
         }
 
+
+        #region Filters
         private static void ApplySoftDeleteFilter(ModelBuilder modelBuilder)
         {
             var softDeleteInterfaces = typeof(IIsDeleted);
@@ -126,6 +128,7 @@ namespace Dal
 
             return await base.SaveChangesAsync(cancellationToken);
         }
+        #endregion
     }
 }
 
