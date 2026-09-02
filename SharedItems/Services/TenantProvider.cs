@@ -16,9 +16,13 @@ namespace SharedItems
         {
             _httpContextAccessor = httpContextAccessor;
         }
+        private List<string> ignoredRoutes = new List<string>() { "auth" };
 
         public int GetTenantId()
         {
+            if (_httpContextAccessor.HttpContext.Request.Path.StartsWithSegments("/api/Auth"))
+                return 0;
+
             var tenantIdHeader = _httpContextAccessor.HttpContext?.Request.Headers[TenantIdHeaderName];
             
             if (string.IsNullOrEmpty(tenantIdHeader))
@@ -30,6 +34,7 @@ namespace SharedItems
             {
                 throw new Exception($"Invalid tenant ID: {tenantIdHeader}");
             }
+
             return tenantId;
         }
     }

@@ -24,14 +24,9 @@ namespace SharedItems.Services
         }
 
 
-        public override Task<ApplicationUser> FindByEmailAsync(string email)
+        public override async Task<ApplicationUser?> FindByEmailAsync(string email)
         {
-            var user = base.FindByEmailAsync(email);
-
-            if (user is null)
-                throw new UnauthorizeException("Invalid username!");
-
-            return user;
+            return await base.FindByEmailAsync(email);
         }
     }
 }
